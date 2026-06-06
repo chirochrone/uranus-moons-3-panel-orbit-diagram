@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 
 
 # Pre-define 1D arrays of JPL IDs before merging into main list
-Galileans = np.arange(701, 705+1)
+Regulars = np.arange(701, 705+1)
 NumIrrs = np.arange(716, 724+1)
 ProvIrrs = np.array([75051])
 
@@ -117,7 +117,7 @@ def opacity_filter(ID):
             return 0.75
 
 
-MOON_IDS = np.concatenate((Galileans, NumIrrs, ProvIrrs))  # merge 1D arrays into a bigger 1D array
+MOON_IDS = np.concatenate((Regulars, NumIrrs, ProvIrrs))  # merge 1D arrays into a bigger 1D array
 N_MOONS = len(MOON_IDS)
 
 START_DATE = "2026-Jan-01"   # orbit start epoch (same for all moons)
