@@ -120,22 +120,21 @@ def opacity_filter(ID):
 MOON_IDS = np.concatenate((Regulars, NumIrrs, ProvIrrs))  # merge 1D arrays into a bigger 1D array
 N_MOONS = len(MOON_IDS)
 
-START_DATE = "2026-Jan-01"   # orbit start epoch (same for all moons)
+END_DATE = "2026-Jan-01"   # orbit start epoch (same for all moons)
 
 # ---------------------------------
 # Query JPL Horizons — one full orbit per moon
 # ---------------------------------
 trajectories = {}
 
-start_dt = datetime.strptime(START_DATE, "%Y-%b-%d")
-
 for i in range(N_MOONS):
     moon_id = int(MOON_IDS[i])
     period_days = ORBITAL_PERIODS.get(moon_id, DEFAULT_PERIOD)
 
-    # Build a stop date that covers exactly one orbital period
-    stop_dt = start_dt + timedelta(days=period_days)
-    stop_date = stop_dt.strftime("%Y-%b-%d")
+    # Fixed end date; start date is one orbital period earlier
+    end_dt = datetime.strptime(END_DATE, "%Y-%b-%d")
+    start_dt_moon = end_dt - timedelta(days=period_days)
+    start_date_moon = start_dt_moon.strftime("%Y-%b-%d")
 
     # Always target ~500 points regardless of period length
     step_hours = max(1, int(period_days * 24 / 500))
@@ -145,8 +144,8 @@ for i in range(N_MOONS):
         id=moon_id,
         location='@7',  # Uranus barycenter
         epochs={
-            'start': START_DATE,
-            'stop': stop_date,
+            'start': start_date_moon,
+            'stop': END_DATE,
             'step': step,
         }
     )
@@ -167,19 +166,19 @@ ax    = fig.add_subplot(131, projection='3d')
 ax_xy = fig.add_subplot(132)
 ax_xz = fig.add_subplot(133)
 
-### Uranus as a sphere ###
-r_uranus = 0.0001708353192  # Uranus radius in AU
+### Planet as a sphere ###
+r_planet = 0.0001708353192  # Planet radius in AU
 u, v = np.mgrid[0:2*np.pi:50j, 0:np.pi:50j]
 
-x_uranus = r_uranus * np.cos(u) * np.sin(v)
-y_uranus = r_uranus * np.sin(u) * np.sin(v)
-z_uranus = r_uranus * np.cos(v)
+x_planet = r_planet * np.cos(u) * np.sin(v)
+y_planet = r_planet * np.sin(u) * np.sin(v)
+z_planet = r_planet * np.cos(v)
 
-ax.plot_surface(x_uranus, y_uranus, z_uranus, color='turquoise', alpha=1, rstride=1, cstride=1)
+ax.plot_surface(x_planet, y_planet, z_planet, color='turquoise', alpha=1, rstride=1, cstride=1)
 
-# Uranus dot on 2D projections
-circle_xy = plt.Circle((0, 0), r_uranus, facecolor='turquoise', edgecolor='none')
-circle_xz = plt.Circle((0, 0), r_uranus, facecolor='turquoise', edgecolor='none')
+# Planet dot on 2D projections
+circle_xy = plt.Circle((0, 0), r_planet, facecolor='turquoise', edgecolor='none')
+circle_xz = plt.Circle((0, 0), r_planet, facecolor='turquoise', edgecolor='none')
 ax_xy.add_patch(circle_xy)
 ax_xz.add_patch(circle_xz)
 
@@ -217,7 +216,7 @@ for i in range(N_MOONS):
     ax_xz.add_collection(lc_xz)
 
     r = np.max(np.sqrt(x**2 + y**2 + z**2))
-    max_range = max(max_range, r)
+    max_range = 0.05#max(max_range, r)
 
 # ---------------------------------
 # Axis formatting — 3D
@@ -259,9 +258,9 @@ for axis_2d, xlabel, ylabel, title in [
 
 if DARK_MODE:
     apply_dark_mode(fig, axes_2d=[ax_xy, ax_xz], axes_3d=[ax])
-    fig.suptitle(f"Uranian irregular moons ({START_DATE})", fontsize=20, color='white')
+    fig.suptitle(f"Uranian irregular moons ({END_DATE})", fontsize=20, color='white')
 else:
-    fig.suptitle(f"Uranian irregular moons ({START_DATE})", fontsize=22)
+    fig.suptitle(f"Uranian irregular moons ({END_DATE})", fontsize=22)
 
 plt.tight_layout()
 
