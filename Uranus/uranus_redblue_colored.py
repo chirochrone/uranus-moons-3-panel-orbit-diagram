@@ -41,7 +41,9 @@ DEFAULT_PERIOD = 500.0  # fallback if ID not in table
 # ---------------------------------
 # User parameters
 # ---------------------------------
-linewidth = 2.0
+linewidth = 2.0  # moon orbit linewidth
+title_fs = 18  # title fontsize
+suptitle_fs = 22  # supertitle fontsize
 
 DARK_MODE = input("Dark mode? (y/n): ")  # Set to False for default white background
 if DARK_MODE == "y":
@@ -240,7 +242,7 @@ ax.xaxis.set_pane_color((1.0, 1.0, 1.0, grid_alpha))
 ax.yaxis.set_pane_color((1.0, 1.0, 1.0, grid_alpha))
 ax.zaxis.set_pane_color((1.0, 1.0, 1.0, grid_alpha))
 
-ax.set_title(f"3D View", fontsize=18)
+ax.set_title(f"3D View", fontsize=title_fs)
 
 # ---------------------------------
 # Axis formatting — 2D projections
@@ -254,15 +256,15 @@ for axis_2d, xlabel, ylabel, title in [
     axis_2d.set_aspect("equal")
     axis_2d.set_xlabel(xlabel)
     axis_2d.set_ylabel(ylabel)
-    axis_2d.set_title(title, fontsize=18)
+    axis_2d.set_title(title, fontsize=title_fs)
     axis_2d.grid(True, alpha=0.3)
 
 
 if DARK_MODE:
     apply_dark_mode(fig, axes_2d=[ax_xy, ax_xz], axes_3d=[ax])
-    fig.suptitle(f"Uranian irregular moons ({END_DATE})", fontsize=20, color='white')
+    fig.suptitle(f"Uranian irregular moons ({END_DATE})", fontsize=suptitle_fs, color='white')
 else:
-    fig.suptitle(f"Uranian irregular moons ({END_DATE})", fontsize=22)
+    fig.suptitle(f"Uranian irregular moons ({END_DATE})", fontsize=suptitle_fs)
 
 plt.tight_layout()
 
