@@ -264,6 +264,6 @@ else:
 
 plt.tight_layout()
 
-plt.savefig("uranus_fade_ver.svg", dpi=300, bbox_inches="tight")
-print(f"Saved as uranus_fade_ver.svg")
+plt.savefig("uranus_redblue_colored.svg", dpi=300, bbox_inches="tight")
+print(f"Saved as uranus_redblue_colored.svg")
 #plt.show()
