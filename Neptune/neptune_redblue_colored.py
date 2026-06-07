@@ -259,6 +259,6 @@ else:
 
 plt.tight_layout()
 
-plt.savefig("neptune_bluered_colored.svg", dpi=300, bbox_inches="tight")
-print(f"Saved as neptune_bluered_colored.svg")
+plt.savefig("neptune_redblue_colored.svg", dpi=300, bbox_inches="tight")
+print(f"Saved as neptune_redblue_colored.svg")
 #plt.show()
