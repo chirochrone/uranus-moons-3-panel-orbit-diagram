@@ -102,33 +102,32 @@ def opacity_filter(ID):
     else:  # regular light mode
         # Regular moons
         if ID <= 808:
-            return 0.5
+            return 1.0
         # Moon 722
         if ID == 85052:
             return 1.0
         else:
-            return 0.75
+            return 1.0
 
 
 MOON_IDS = np.concatenate((Regulars, NumIrrs, ProvIrrs))  # merge 1D arrays into a bigger 1D array
 N_MOONS = len(MOON_IDS)
 
-START_DATE = "2026-Jan-01"   # orbit start epoch (same for all moons)
+END_DATE = "2026-Jan-01"   # orbit start epoch (same for all moons)
 
 # ---------------------------------
 # Query JPL Horizons — one full orbit per moon
 # ---------------------------------
 trajectories = {}
 
-start_dt = datetime.strptime(START_DATE, "%Y-%b-%d")
-
 for i in range(N_MOONS):
     moon_id = int(MOON_IDS[i])
     period_days = ORBITAL_PERIODS.get(moon_id, DEFAULT_PERIOD)
 
-    # Build a stop date that covers exactly one orbital period
-    stop_dt = start_dt + timedelta(days=period_days)
-    stop_date = stop_dt.strftime("%Y-%b-%d")
+    # Fixed end date; start date is one orbital period earlier
+    end_dt = datetime.strptime(END_DATE, "%Y-%b-%d")
+    start_dt_moon = end_dt - timedelta(days=period_days)
+    start_date_moon = start_dt_moon.strftime("%Y-%b-%d")
 
     # Always target ~500 points regardless of period length
     step_hours = max(1, int(period_days * 24 / 500))
@@ -138,8 +137,8 @@ for i in range(N_MOONS):
         id=moon_id,
         location='@8',  # Neptune barycenter
         epochs={
-            'start': START_DATE,
-            'stop': stop_date,
+            'start': start_date_moon,
+            'stop': END_DATE,
             'step': step,
         }
     )
@@ -252,12 +251,12 @@ for axis_2d, xlabel, ylabel, title in [
 
 if DARK_MODE:
     apply_dark_mode(fig, axes_2d=[ax_xy, ax_xz], axes_3d=[ax])
-    fig.suptitle(f"Neptunian irregular moons ({START_DATE})", fontsize=20, color='white')
+    fig.suptitle(f"Neptunian irregular moons ({END_DATE})", fontsize=20, color='white')
 else:
-    fig.suptitle(f"Neptunian irregular moons ({START_DATE})", fontsize=22)
+    fig.suptitle(f"Neptunian irregular moons ({END_DATE})", fontsize=22)
 
 plt.tight_layout()
 
-plt.savefig("neptune_fade_ver.svg", dpi=300, bbox_inches="tight")
-print(f"Saved as neptune_fade_ver.svg")
+plt.savefig("neptune_bluered_colored.svg", dpi=300, bbox_inches="tight")
+print(f"Saved as neptune_bluered_colored.svg")
 #plt.show()
