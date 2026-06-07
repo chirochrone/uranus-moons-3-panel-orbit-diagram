@@ -41,6 +41,8 @@ DEFAULT_PERIOD = 500.0  # fallback if ID not in table
 # ---------------------------------
 # User parameters
 # ---------------------------------
+linewidth = 2.0
+
 DARK_MODE = input("Dark mode? (y/n): ")  # Set to False for default white background
 if DARK_MODE == "y":
     DARK_MODE = True
@@ -200,19 +202,19 @@ for i in range(N_MOONS):
     alphas = np.linspace(0.0, max_alpha, len(segments_3d))
     colors = [(*base_color, a) for a in alphas]
 
-    lc = Line3DCollection(segments_3d, colors=colors, linewidth=1.0)
+    lc = Line3DCollection(segments_3d, colors=colors, linewidth=linewidth)
     ax.add_collection3d(lc)
 
     # --- XY projection ---
     points_xy = np.array([x, y]).T.reshape(-1, 1, 2)
     segments_xy = np.concatenate([points_xy[:-1], points_xy[1:]], axis=1)
-    lc_xy = LineCollection(segments_xy, colors=colors, linewidth=1.0)
+    lc_xy = LineCollection(segments_xy, colors=colors, linewidth=linewidth)
     ax_xy.add_collection(lc_xy)
 
     # --- XZ projection ---
     points_xz = np.array([x, z]).T.reshape(-1, 1, 2)
     segments_xz = np.concatenate([points_xz[:-1], points_xz[1:]], axis=1)
-    lc_xz = LineCollection(segments_xz, colors=colors, linewidth=1.0)
+    lc_xz = LineCollection(segments_xz, colors=colors, linewidth=linewidth)
     ax_xz.add_collection(lc_xz)
 
     r = np.max(np.sqrt(x**2 + y**2 + z**2))
