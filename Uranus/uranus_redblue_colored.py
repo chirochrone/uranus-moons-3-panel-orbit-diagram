@@ -216,7 +216,7 @@ for i in range(N_MOONS):
     ax_xz.add_collection(lc_xz)
 
     r = np.max(np.sqrt(x**2 + y**2 + z**2))
-    max_range = 0.05#max(max_range, r)
+    max_range = max(max_range, r)
 
 # ---------------------------------
 # Axis formatting — 3D
